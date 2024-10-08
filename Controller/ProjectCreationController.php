@@ -17,20 +17,23 @@ class ProjectCreationController extends BaseProjectCreationController
 
     public function save()
     {
+        // Chamar o comportamento padrão para criar o projeto e obter o ID
+        $projectId = parent::save();
+
         // Obter os valores dos campos personalizados
         $customFields = [
             'justification' => $this->request->getStringParam('justify'),
-            'objective' => $this->request->getStringParam('objective'), // Adicione outros campos conforme necessário
+            'objective' => $this->request->getStringParam('objective'),
         ];
 
         // Salvar os campos personalizados no banco de dados
-        $projectId = $this->projectModel->getLastId(); // Obter o ID do último projeto criado
-        $this->customFieldsModel->saveCustomField($projectId, $customFields);
+        if ($projectId) {
+            $this->customFieldsModel->saveCustomField($projectId, $customFields);
+            $this->flash->success(t('Saved'));
+        } else {
+            $this->flash->failure(t('Error on save.'));
+        }
 
-        // Mensagem de sucesso
-        $this->flash->success(t('Saved'));
-
-        // Continuar com o comportamento padrão do controller
-        return parent::save();
+        return $projectId;
     }
 }
