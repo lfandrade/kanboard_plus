@@ -15,14 +15,15 @@ class Plugin extends Base
         $this->container['ProjectCreationController'] = function ($c) {
             return new \Kanboard\Plugin\kanboard_plus\Controller\ProjectCreationController($c);
         };
-
+    
         // Anexar o novo campo ao template de criação de projeto
         $this->template->hook->attach('template:project:creation:form', 'kanboard_plus:project_creation/form_custom');
-
+   
         error_log('Iniciando o plugin Kanboard_Plus');
+    
+        // Anexar o novo campo ao template de edição de projeto
         $this->template->hook->attach('template:project:edit:form', 'kanboard_plus:project_edit/form');
         error_log('Template de edição de projeto foi anexado.');
-
     
         // Registrar o modelo de campos personalizados
         $this->container['ProjectCustomFieldsModel'] = function ($c) {
